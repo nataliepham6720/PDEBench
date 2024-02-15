@@ -11,8 +11,10 @@ import imageio
 import numpy as np
 from tqdm import tqdm 
 import hydra
-from pdebench.data_gen.src import data_io
-from pdebench.data_gen.src import image_processor
+#from pdebench.data_gen.src import data_io
+from src import data_io 
+# from src import image_processor
+#from pdebench.data_gen.src import image_processor
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +37,9 @@ def ns_sim(
         velocity_extrapolation:str='ZERO',
         NU: float=0.01,
         scale: float= 10.0,
-        smoothness: float=3.0,
+        smoothness: float=1.0,
+        force_smoothness: float=3.0,
+        force_scale: float=0.15,
         grid_size=(100,100),
         enable_gravity: bool=False,
         enable_obstacles: bool=False,
@@ -94,7 +98,7 @@ def ns_sim(
         elif y == None:
             return Box[0:x, :]
         else:
-            return Box[0:x, 0:y]
+            return Box['x,y', 0:x, 0:y]
 
 
 
@@ -179,13 +183,13 @@ def ns_sim(
         callbacks.append(
             _store 
         )
-    if save_images:
-        def _save_img(frame_i, t, particles, velocity, **kwargs):
-            particles_images.append()
-            velocity_images.append()
-        callbacks.append(
-            _save_img 
-        )
+    #if save_images:
+    #    def _save_img(frame_i, t, particles, velocity, **kwargs):
+    #        particles_images.append()
+    #        velocity_images.append()
+    #    callbacks.append(
+    #        _save_img 
+    #    )
 
     profile_ctx = nullcontext()
     if profile:

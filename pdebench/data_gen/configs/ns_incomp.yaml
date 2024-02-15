@@ -11,8 +11,8 @@ sim_name: 'ns_sim_2d'
 label: null
 
 # Solver Parameters 
-domain_size: [1, 1]
-grid_size: [256,256]
+# domain_size: [1, 1]
+grid_size: [64,64]
 
 #['scalar_grid', extrapolation_x:(type or bound), extrapolation_y:(type or bound)]
 particle_extrapolation: 'BOUNDARY'

@@ -3,6 +3,8 @@ import subprocess
 import json
 import logging
 
+import phi
+#from phi.flow import *
 from phi.flow import *
 from phi.field import Field 
 from phi.math import Shape
