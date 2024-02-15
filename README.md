@@ -78,6 +78,7 @@ conda activate myenv
 Install dependencies for model training:
 ```
 conda install deepxde hydra-core h5py -c conda-forge
+pip install phiflow
 ```
 
 According to your hardware availability, either install PyTorch with CUDA support:
