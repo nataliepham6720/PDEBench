@@ -78,7 +78,7 @@ conda activate myenv
 Install dependencies for model training:
 ```
 conda install deepxde hydra-core h5py -c conda-forge
-pip install phiflow
+pip install phiflow einops
 ```
 
 According to your hardware availability, either install PyTorch with CUDA support:
@@ -98,7 +98,10 @@ conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 cpuonly -c 
 
 Optional dependencies for data generation:
 ```
-conda install clawpack jax jaxlib python-dotenv
+# conda install clawpack jax jaxlib 
+pip install -U "jax[cuda11_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+conda install python-dotenv
+conda install conda-forge::clawpack
 ```
 
 ## Configuring DeepXDE

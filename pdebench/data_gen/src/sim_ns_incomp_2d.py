@@ -98,7 +98,7 @@ def ns_sim(
         elif y == None:
             return Box[0:x, :]
         else:
-            return Box['x,y', 0:x, 0:y]
+            return Box['x,y', 0:1, 1:2] # Box[0:x,0:y] #Box['x,y', 0:x, 0:y]
 
 
 
