@@ -144,6 +144,7 @@ class SpectralConv2d_fast(nn.Module):
         """
 
         self.in_channels = in_channels
+        # print('Input: ', in_channels)
         self.out_channels = out_channels
         self.modes1 = modes1 #Number of Fourier modes to multiply, at most floor(N/2) + 1
         self.modes2 = modes2
@@ -171,10 +172,11 @@ class SpectralConv2d_fast(nn.Module):
 
         #Return to physical space
         x = torch.fft.irfft2(out_ft, s=(x.size(-2), x.size(-1)))
+        print(x.shape)
         return x
 
 class FNO2d(nn.Module):
-    def __init__(self, num_channels, modes1=12, modes2=12, width=20, initial_step=10):
+    def __init__(self, num_channels, modes1=32, modes2=32, width=20, initial_step=10):
         super(FNO2d, self).__init__()
 
         """
@@ -212,6 +214,7 @@ class FNO2d(nn.Module):
     def forward(self, x, grid):
         # x dim = [b, x1, x2, t*v]
         x = torch.cat((x, grid), dim=-1)
+        print(x.shape)
         x = self.fc0(x)
         x = x.permute(0, 3, 1, 2)
         

@@ -32,7 +32,8 @@ def parse_metadata(pde_names):
     """
 
     # meta_df = pd.read_csv("download_metadata.csv")
-    meta_df = pd.read_csv("download_ns_incomp_small_ver.csv")
+    meta_df = pd.read_csv("/home/thanhngp/PDEBench/pdebench/data_download/download_2D_pdes.csv")
+    # meta_df = pd.read_csv("/home/thanhngp/PDEBench/pdebench/data_download/download_ns_incomp_small_ver.csv")
 
     # Ensure the pde_name is defined
     pde_list = [

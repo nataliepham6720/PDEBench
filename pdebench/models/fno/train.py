@@ -16,9 +16,14 @@ from timeit import default_timer
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-from pdebench.models.fno.fno import FNO1d, FNO2d, FNO3d
-from pdebench.models.fno.utils import FNODatasetSingle, FNODatasetMult
-from pdebench.models.metrics import metrics
+# from pdebench.models.fno.fno import FNO1d, FNO2d, FNO3d
+# from pdebench.models.fno.utils import FNODatasetSingle, FNODatasetMult
+# from pdebench.models.metrics import metrics
+
+from fno import FNO1d, FNO2d, FNO3d
+from utils import FNODatasetSingle, FNODatasetMult
+from metrics import metrics
+
 
 def run_training(if_training,
                  continue_training,
@@ -47,7 +52,7 @@ def run_training(if_training,
                  y_max,
                  t_min,
                  t_max,
-                 base_path='../data/',
+                 base_path='/home/thanhngp/PDEBench/pdebench/',
                  training_type='autoregressive'
                  ):
 
@@ -59,7 +64,10 @@ def run_training(if_training,
     
     if single_file:
         # filename
-        model_name = flnm[:-5] + '_FNO'
+        # model_name = flnm[:-5] + '_FNO'
+        model_name = base_path + flnm[-29:-3] + '_FNO'
+        print(model_name)
+
         print("FNODatasetSingle")
 
         # Initialize the dataset and dataloader
@@ -81,7 +89,8 @@ def run_training(if_training,
         
     else:
         # filename
-        model_name = flnm + '_FNO'
+        model_name = base_path + flnm[:-25] + '_FNO'
+        print(model_name)
     
         print("FNODatasetMult")
         train_data = FNODatasetMult(flnm,
@@ -107,6 +116,7 @@ def run_training(if_training,
     ################################################################
     
     _, _data, _ = next(iter(val_loader))
+    print(_data.shape)
     dimensions = len(_data.shape)
     print('Spatial Dimension', dimensions - 3)
     if dimensions == 4:
@@ -184,7 +194,7 @@ def run_training(if_training,
         train_l2_full = 0
         for xx, yy, grid in train_loader:
             loss = 0
-            
+
             # xx: input tensor (first few time steps) [b, x1, ..., xd, t_init, v]
             # yy: target tensor [b, x1, ..., xd, t, v]
             # grid: meshgrid [b, x1, ..., xd, dims]
@@ -197,15 +207,21 @@ def run_training(if_training,
             # Extract shape of the input tensor for reshaping (i.e. stacking the
             # time and channels dimension together)
             inp_shape = list(xx.shape)
+            print(inp_shape)
             inp_shape = inp_shape[:-2]
+            print(inp_shape)
             inp_shape.append(-1)
-    
+            print(inp_shape)
+            print('init', initial_step)
+
             if training_type in ['autoregressive']:
                 # Autoregressive loop
                 for t in range(initial_step, t_train):
                     
                     # Reshape input tensor into [b, x1, ..., xd, t_init*v]
                     inp = xx.reshape(inp_shape)
+                    print(inp.shape)
+                    print(grid.shape)
                     
                     # Extract target at current time step
                     y = yy[..., t:t+1, :]
@@ -309,6 +325,34 @@ def run_training(if_training,
             
 if __name__ == "__main__":
     
-    run_training()
+    run_training(# model_name='FNO',
+                 if_training=True,
+                 continue_training=False, 
+              num_workers=2,
+              initial_step=10,
+              batch_size=1,
+              t_train=101,
+              num_channels=1,
+              modes=32,
+              width=20,
+              # pushforward=True,
+              epochs=10,
+              learning_rate=1.e-3,
+              scheduler_step=100,
+              scheduler_gamma=0.5,
+              model_update=5,
+              flnm='/user_data/thanhngp/pde/data/2D/2D/shallow-water/2D_rdb_NA_NA.h5',
+              single_file=True,
+              reduced_resolution=1, 
+              reduced_resolution_t=1,
+              reduced_batch=1,
+              plot=False,
+              channel_plot=0,
+              x_min=-1,
+              x_max=1,
+              y_min=-1,
+              y_max=1,
+              t_min=0,
+              t_max=1)
     print("Done.")
 
